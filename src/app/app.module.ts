@@ -8,7 +8,18 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import * as PlotlyJS from 'plotly.js-dist-min';
+import { PlotlyModule } from 'angular-plotly.js';
+import {HeatmapComponent} from "./heatmap/heatmap.component";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {DetailListContainerComponent} from "./detail-list-container/detail-list-container.component";
 
+PlotlyModule.plotlyjs = PlotlyJS
 @NgModule({
   declarations: [
     AppComponent
@@ -20,7 +31,16 @@ import {MatButtonModule} from "@angular/material/button";
     MatToolbarModule,
     MatSidenavModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
+    PlotlyModule,
+    HeatmapComponent,
+    MatProgressBarModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    DetailListContainerComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

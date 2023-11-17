@@ -1,0 +1,13 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      Differential Analysis Heatmap
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content style="overflow: auto; max-height: 1000px">
+    <div style="display: flex; justify-content: center">
+      <plotly-plot [data]="graphData" [layout]="graphLayout" [revision]="revision" [updateOnLayoutChange]="true"></plotly-plot>
+    </div>
+  </mat-card-content>
+</mat-card>
+

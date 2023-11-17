@@ -1,0 +1,11 @@
+<mat-paginator [pageSize]="pageSize" [length]="totalItems" [pageIndex]="pageIndex" (page)="handlePageEvent($event)">
+
+</mat-paginator>
+
+<div style="padding: 20px" *ngFor="let s of displayDF">
+  <app-single-protein-container [data]="s"></app-single-protein-container>
+</div>
+
+<mat-paginator [pageSize]="pageSize" [length]="totalItems" (page)="handlePageEvent($event)">
+
+</mat-paginator>

@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>
+  Sample Labelling
+</h1>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div style="display: flex; gap: 20px" *ngFor="let d of data">
+      <mat-form-field style="width: 300px">
+        <mat-label>{{d}}</mat-label>
+        <input matInput [formControlName]="d" [placeholder]="d">
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button [mat-dialog-close]="form.value" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

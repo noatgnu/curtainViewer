@@ -1,0 +1,28 @@
+<div style="display: flex; flex-direction: row; gap: 20px">
+  <div style="width: 300px">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{entry}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p *ngIf="geneVariants.length > 0">Gene Variants: <mat-chip *ngFor="let g of geneVariants" color="primary">{{g}}</mat-chip> </p>
+        <p *ngIf="accVariants.length > 0">UniProt Acc Variants: <mat-chip *ngFor="let a of accVariants" color="accent">{{a}}</mat-chip></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div style="flex-grow: 1">
+    <mat-card>
+      <mat-card-content>
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+          <mat-tab label="Differential Analysis">
+            <app-horizontal-bar-chart [data]="data"></app-horizontal-bar-chart>
+          </mat-tab>
+          <mat-tab label="Raw Data">
+            <app-raw-data-bar-chart [data]="entry"></app-raw-data-bar-chart>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
