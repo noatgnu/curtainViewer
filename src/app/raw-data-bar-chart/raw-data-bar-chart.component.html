@@ -1,1 +1,3 @@
-<p>raw-data-bar-chart works!</p>
+<div *ngFor="let s of sessionList">
+  <plotly-plot [data]="graphDataMap[s]" [layout]="graphLayoutMap[s]" [revision]="revision" [updateOnlyWithRevision]="true"></plotly-plot>
+</div>

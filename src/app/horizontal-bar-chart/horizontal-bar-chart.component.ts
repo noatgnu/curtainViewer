@@ -108,12 +108,14 @@ export class HorizontalBarChartComponent {
 
         const selectedData = group.where(row => row.source_pid === matchEntry && row.comparison === selectedComparison).bake()
         const r = selectedData.first()
-        temp.y.push(r.session)
-        tempS.y.push(r.session)
-        temp.x.push(r.foldChange)
-        tempS.x.push(r.significant)
-        graphData.push(temp)
-        graphDataS.push(tempS)
+        if (r.session) {
+          temp.y.push(this.settings.settings.labelMap[r.session])
+          tempS.y.push(this.settings.settings.labelMap[r.session])
+          temp.x.push(r.foldChange)
+          tempS.x.push(r.significant)
+          graphData.push(temp)
+          graphDataS.push(tempS)
+        }
       }
     })
     //calculate height of graph based on number of sessions

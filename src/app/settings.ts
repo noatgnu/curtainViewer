@@ -4,6 +4,7 @@ import {CompareData} from "./compare-data";
 export class Settings {
   idList: string[] = []
   colorMap: {[key: string]: string} = {}
+  barChartColorMap: {[key: string]: { [key: string]: string }} = {}
   defaultColorList: string[] = [
     "#fd7f6f",
     "#7eb0d5",
@@ -40,6 +41,25 @@ export class Settings {
     for (let i = 0; this.idList.length > i; i++) {
       if (!(this.idList[i] in this.colorMap)) {
         this.colorMap[this.idList[i]] = this.defaultColorList[i % this.defaultColorList.length]
+      }
+    }
+  }
+
+  automatedSetColorForBarChartUsingSampleMap() {
+    for (const i in this.sampleMap) {
+      let curretPosition = 0
+      let currentCondition = ""
+      for (const j in this.sampleMap[i]) {
+        if (!(i in this.barChartColorMap)) {
+          this.barChartColorMap[i] = {}
+        }
+        if (!(this.sampleMap[i][j]["condition"] in this.barChartColorMap[i])) {
+          if (this.sampleMap[i][j]["condition"] !== currentCondition) {
+            currentCondition = this.sampleMap[i][j]["condition"]
+            this.barChartColorMap[i][currentCondition] = this.defaultColorList[curretPosition % this.defaultColorList.length]
+            curretPosition++
+          }
+        }
       }
     }
   }

@@ -101,6 +101,7 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
                         this.settings.settings.selectionMap[d] = {}
                       }
                       this.settings.settings.sampleMap[d] = message.data[d]["sampleMap"]
+                      this.settings.settings.automatedSetColorForBarChartUsingSampleMap()
                       this.settings.settings.rawMap[d] = new DataFrame(message.data[d]["raw"])
                       this.settings.settings.differentialMap[d] = new DataFrame(message.data[d]["differential"])
                       this.settings.settings.comparisonMap[d] = {selected: "", comparisonList: []}

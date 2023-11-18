@@ -23,6 +23,7 @@ export class SingleProteinContainerComponent {
   accVariants: string[] = []
   geneVariants: string[] = []
   displayDF: IDataFrame<number, CompareData> = new DataFrame()
+
   @Input() set data(value: IDataFrame<number, CompareData>) {
     this._data = value
     this.entry = this._data.first().source_pid
