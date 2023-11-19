@@ -22,7 +22,10 @@ export class RawDataBarChartComponent {
   revision = 0
   df: IDataFrame<number, {replicate: string, condition: string, value: number, session: string, primaryID: string}> = new DataFrame()
   graphDataMap: any = {}
+  graphDataViolinMap: any = {}
   graphLayoutMap: any = {}
+  graphViolinLayoutMap: any = {}
+
   // barchart layout
   graphLayout: any = {
     title: "",
@@ -45,6 +48,27 @@ export class RawDataBarChartComponent {
     }
   }
 
+  graphLayoutViolin: any = {
+    title: "",
+    width: 100,
+    height: 600,
+    margin: {
+      t:50,
+      b:100,
+      l:100,
+      r:0},
+    yaxis: {
+      title: "Intensity",
+    },
+    xaxis: {
+      title: "Condition",
+      type: "category",
+      tickmode: "array",
+      tickvals: [],
+      ticktext: []
+    }
+  }
+
   sessionList: string[] = []
   mergedGraphData: any[] = []
   mergedGraphLayout: any = {
@@ -53,9 +77,7 @@ export class RawDataBarChartComponent {
   @Input() set data(value: string) {
     this._data = value
     if (this._data !== "") {
-      if (!this.settings.settings.mergedBarChartMap[this._data]) {
-        this.settings.settings.mergedBarChartMap[this._data] = {merged: false, separateColor: false}
-      }
+
       const temp: any[] = []
       for (const i in this.settings.settings.rawMap) {
         const data = this.settings.settings.rawMap[i]
@@ -72,9 +94,14 @@ export class RawDataBarChartComponent {
       if (temp.length > 0) {
         this.df = new DataFrame(temp)
       }
-
-      this.drawGraph()
       this.sessionList = this.df.getSeries("session").distinct().toArray()
+      if (!this.settings.settings.mergedBarChartMap[this._data]) {
+        this.settings.settings.mergedBarChartMap[this._data] = {merged: false, separateColor: false, showViolinPlot: false}
+      } else {
+        this.form.setValue({"merge": this.settings.settings.mergedBarChartMap[this._data].merged, "separateColor": this.settings.settings.mergedBarChartMap[this._data].separateColor, "showViolinPlot":this.settings.settings.mergedBarChartMap[this._data].showViolinPlot})
+      }
+      this.drawGraph()
+
     }
   }
 
@@ -84,7 +111,8 @@ export class RawDataBarChartComponent {
 
   form = this.fb.group({
     merge: new FormControl<boolean>(false),
-    separateColor: new FormControl<boolean>(false)
+    separateColor: new FormControl<boolean>(false),
+    showViolinPlot: new FormControl<boolean>(false)
   })
 
   constructor(private settings: SettingsService, private fb: FormBuilder, private dataService: DataService) {
@@ -95,6 +123,10 @@ export class RawDataBarChartComponent {
       if (value.separateColor !== null && value.separateColor !== undefined) {
         this.settings.settings.mergedBarChartMap[this._data].separateColor = value.separateColor
       }
+      if (value.showViolinPlot !== null && value.showViolinPlot !== undefined) {
+        this.settings.settings.mergedBarChartMap[this._data].showViolinPlot = value.showViolinPlot
+      }
+
       this.drawGraph()
     })
     this.dataService.redrawSubject.subscribe(data => {
@@ -130,8 +162,16 @@ export class RawDataBarChartComponent {
     this.graphLayoutMap = graphLayoutMap
     this.graphDataMap = graphDataMap
 
+    if (this.settings.settings.mergedBarChartMap[this._data].showViolinPlot) {
+      this.drawViolinPlot()
+    }
+
     if (this.settings.settings.mergedBarChartMap[this._data].merged) {
-      this.mergeBarChart()
+      if (this.settings.settings.mergedBarChartMap[this._data].showViolinPlot) {
+        this.drawMergedViolinPlot()
+      } else {
+        this.mergeBarChart()
+      }
     }
 
     this.revision++
@@ -140,7 +180,7 @@ export class RawDataBarChartComponent {
   mergeBarChart() {
     //merge bar chart and layout data from graphDataMap and graphLayoutMap
     const graphData: any[] = []
-    const graphLayout: any = JSON.parse(JSON.stringify(this.graphLayout))
+    let graphLayout: any = JSON.parse(JSON.stringify(this.graphLayout))
     graphLayout.title = "Merged"
     graphLayout.annotations = []
     graphLayout.shapes = []
@@ -148,7 +188,7 @@ export class RawDataBarChartComponent {
     let localBarCount: {[key: string] :number} = {}
     for (const session of this.sessionList) {
       localBarCount[session] = 0
-      const temp: any = {
+      let temp: any = {
         x: [],
         y: [],
         type: 'bar',
@@ -157,6 +197,7 @@ export class RawDataBarChartComponent {
           "color": this.settings.settings.colorMap[session]
         },
       }
+
       if (this.settings.settings.mergedBarChartMap[this._data].separateColor) {
         temp.marker.color = []
       }
@@ -218,6 +259,112 @@ export class RawDataBarChartComponent {
     }
     this.mergedGraphData = graphData
     this.mergedGraphLayout = graphLayout
+  }
 
+  drawViolinPlot() {
+    const graphDataViolinMap: any = {}
+    const graphDataViolinLayoutMap: any = {}
+    for (const s of this.sessionList) {
+      if (!graphDataViolinMap[s]) {
+        graphDataViolinMap[s] = []
+
+      }
+      if (!graphDataViolinLayoutMap[s]) {
+        graphDataViolinLayoutMap[s] = JSON.parse(JSON.stringify(this.graphLayoutViolin))
+      }
+
+      for (const j of this.graphDataMap[s]) {
+        const temp: any = {
+          x: j.name,
+          y: j.y,
+          type: 'violin',
+          name: j.name,
+          points: "all",
+          box: {
+            visible: true
+          },
+          meanline: {
+            visible: true
+          },
+          line: {
+            color: "black"
+          },
+          fillcolor: this.settings.settings.barChartColorMap[s][j.name],
+          showlegend: false,
+          spanmode: "soft"
+        }
+        graphDataViolinMap[s].push(temp)
+        graphDataViolinLayoutMap[s].title = this.settings.settings.labelMap[s]
+        graphDataViolinLayoutMap[s].xaxis.tickvals.push(j.name)
+        graphDataViolinLayoutMap[s].xaxis.ticktext.push(j.name)
+        graphDataViolinLayoutMap[s].width = graphDataViolinLayoutMap[s].width + 90
+      }
+    }
+    this.graphDataViolinMap = graphDataViolinMap
+    this.graphViolinLayoutMap = graphDataViolinLayoutMap
+  }
+
+  drawMergedViolinPlot() {
+    const graphData: any[] = []
+    const graphLayout: any = JSON.parse(JSON.stringify(this.graphLayoutViolin))
+    graphLayout.title = "Merged"
+    graphLayout.annotations = []
+    graphLayout.shapes = []
+    let barCount = 0
+    let localBarCount: {[key: string] :number} = {}
+    for (const s of this.sessionList) {
+      localBarCount[s] = this.graphDataViolinMap[s].length
+      for (const j of this.graphDataViolinMap[s]) {
+        if (!this.settings.settings.mergedBarChartMap[this._data].separateColor) {
+          j.fillcolor = this.settings.settings.colorMap[s]
+        }
+        graphData.push(j)
+        graphLayout.xaxis.tickvals.push(j.x)
+        graphLayout.xaxis.ticktext.push(j.x)
+      }
+      barCount = barCount + this.graphDataViolinMap[s].length
+      // add a session label
+      const middlePoint = this.graphDataViolinMap[s][Math.round(localBarCount[s]/2)-1].x
+      const label = {
+        x: middlePoint,
+        y: 1,
+        xref: 'x',
+        yref: 'paper',
+        text: this.settings.settings.labelMap[s],
+        xanchor: 'center',
+        yanchor: 'bottom',
+        showarrow: false,
+        font: {
+          size: 10,
+          color: this.settings.settings.colorMap[s]
+        }
+      }
+      graphLayout.annotations.push(label)
+    }
+    let currentSampleNumber = 0
+    for (const s of this.sessionList) {
+      currentSampleNumber = currentSampleNumber + localBarCount[s]
+      if (currentSampleNumber !== barCount) {
+        const shape = {
+          type: "line",
+          xref: "paper",
+          yref: "paper",
+          x0: currentSampleNumber/barCount,
+          y0: 0,
+          x1: currentSampleNumber/barCount,
+          y1: 1,
+          line: {
+            width: 1,
+            dash: 'dash'
+          }
+        }
+        graphLayout.shapes.push(shape)
+      }
+    }
+    graphLayout.width = graphLayout.width + barCount * 90
+    console.log(graphData)
+    console.log(graphLayout)
+    this.mergedGraphData = graphData
+    this.mergedGraphLayout = graphLayout
   }
 }

@@ -29,7 +29,7 @@ export class Settings {
   selectionMap: {[key: string] : {[key: string]: {[key: string]: string}}} = {}
 
   comparisonMap: {[key: string]: {selected: string, comparisonList: string[]}} = {}
-  mergedBarChartMap: {[key: string]: {merged: boolean, separateColor: boolean}} = {}
+  mergedBarChartMap: {[key: string]: {merged: boolean, separateColor: boolean, showViolinPlot: boolean}} = {}
 
   sampleMap: {[key: string]: {[key: string]: any}} = {}
 
@@ -87,6 +87,7 @@ export class Settings {
       found: this.found,
       customColorScale: this.customColorScale,
       barChartColorMap: this.barChartColorMap,
+      mergedBarChartMap: this.mergedBarChartMap
     }
     for (const i in payload.differentialMap) {
       payload.differentialMap[i] = payload.differentialMap[i].toArray()
