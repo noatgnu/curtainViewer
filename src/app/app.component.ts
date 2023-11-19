@@ -10,6 +10,7 @@ import {LinkLabelDialogComponent} from "./link-label-dialog/link-label-dialog.co
 import {SettingsService} from "./settings.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DataService} from "./data.service";
+import {ColorEditorComponent} from "./color-editor/color-editor.component";
 
 @Component({
   selector: 'app-root',
@@ -149,7 +150,7 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
     ref.componentInstance.data = this.idList
     ref.afterClosed().subscribe(result => {
       this.settings.settings.labelMap = result
-
+      this.dataService.redrawSubject.next(true)
     })
   }
 
@@ -211,5 +212,24 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
       }
     }
     input.click()
+  }
+
+  loadColorEditor() {
+    const ref = this.dialog.open(ColorEditorComponent)
+    ref.afterClosed().subscribe(result => {
+      if (result) {
+        for (const c of result.barChartColors) {
+          this.settings.settings.barChartColorMap[c.session][c.name] = c.color
+        }
+        for (const c of result.sessionColors) {
+          this.settings.settings.colorMap[c.name] = c.color
+        }
+        this.settings.settings.customColorScale = []
+        for (const c of result.customColorScale) {
+          this.settings.settings.customColorScale.push([c.mark, c.color])
+        }
+        this.dataService.redrawSubject.next(true)
+      }
+    })
   }
 }

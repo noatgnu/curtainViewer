@@ -4,6 +4,7 @@
 
 <div style="padding: 20px" *ngFor="let s of displayDF">
   <app-single-protein-container [data]="s"></app-single-protein-container>
+  <mat-divider style="margin: 20px"></mat-divider>
 </div>
 
 <mat-paginator [pageSize]="pageSize" [length]="totalItems" (page)="handlePageEvent($event)">

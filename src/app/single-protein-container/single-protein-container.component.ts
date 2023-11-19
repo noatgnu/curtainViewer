@@ -9,11 +9,12 @@ import {PageEvent} from "@angular/material/paginator";
 import {HorizontalBarChartComponent} from "../horizontal-bar-chart/horizontal-bar-chart.component";
 import {MatTabsModule} from "@angular/material/tabs";
 import {RawDataBarChartComponent} from "../raw-data-bar-chart/raw-data-bar-chart.component";
+import {MatDividerModule} from "@angular/material/divider";
 
 @Component({
   selector: 'app-single-protein-container',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatChipsModule, HorizontalBarChartComponent, MatTabsModule, RawDataBarChartComponent],
+  imports: [CommonModule, MatCardModule, MatChipsModule, HorizontalBarChartComponent, MatTabsModule, RawDataBarChartComponent, MatDividerModule],
   templateUrl: './single-protein-container.component.html',
   styleUrl: './single-protein-container.component.scss'
 })

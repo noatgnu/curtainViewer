@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Color Editor</h1>
+<mat-dialog-content>
+  <div>
+    <p>Bar chart condition color</p>
+    <mat-list>
+      <mat-list-item *ngFor="let b of barChartColors">
+        <div style="display: flex; gap: 20px; justify-content: space-between; align-items: center">
+          <ngx-colors ngx-colors-trigger [(ngModel)]="b.color"></ngx-colors> <div>{{b.name}}</div> <div>{{b.session}}</div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div>
+    <p>Bar chart session color</p>
+    <mat-list>
+      <mat-list-item *ngFor="let b of sessionColors">
+        <div style="display: flex; gap: 20px; justify-content: space-between; align-items: center">
+          <ngx-colors ngx-colors-trigger [(ngModel)]="b.color"></ngx-colors> <div>{{b.name}}</div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div>
+    <p>Heatmap color scale</p>
+    <mat-list>
+      <mat-list-item *ngFor="let c of customColorScale">
+        <div style="display: flex; gap: 20px; justify-content: left; align-items: center">
+          <ngx-colors ngx-colors-trigger [(ngModel)]="c.color"></ngx-colors> <div>{{c.mark}}</div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button [mat-dialog-close]="{customColorScale: customColorScale, barChartColors: barChartColors, sessionColors: sessionColors}">Save</button>
+</mat-dialog-actions>

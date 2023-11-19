@@ -1,3 +1,19 @@
-<div *ngFor="let s of sessionList">
-  <plotly-plot [data]="graphDataMap[s]" [layout]="graphLayoutMap[s]" [revision]="revision" [updateOnlyWithRevision]="true"></plotly-plot>
-</div>
+<form [formGroup]="form" style="display: flex; flex-direction: row; gap: 20px; padding: 20px" (ngSubmit)="drawGraph()">
+  <mat-checkbox formControlName="merge">Merge Different Sessions</mat-checkbox>
+  <mat-checkbox formControlName="separateColor">Differentiate Condition by Color</mat-checkbox>
+  <button mat-raised-button color="primary" type="submit">Redraw</button>
+</form>
+
+<ng-container *ngIf="!form.value.merge; else mergedPlot">
+  <div *ngFor="let s of sessionList" style="display: flex; justify-content: center">
+    <plotly-plot [data]="graphDataMap[s]" [layout]="graphLayoutMap[s]" [revision]="revision" [updateOnlyWithRevision]="true"></plotly-plot>
+  </div>
+</ng-container>
+
+<ng-template #mergedPlot>
+  <div style="display: flex; justify-content: center">
+    <plotly-plot [data]="mergedGraphData" [layout]="mergedGraphLayout" [revision]="revision" [updateOnlyWithRevision]="true"></plotly-plot>
+  </div>
+</ng-template>
+
+

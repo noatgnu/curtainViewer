@@ -287,6 +287,9 @@ SOFTWARE.
 [others]: https://github.com/json5/json5/contributors
 
 
+ngx-colors
+MIT
+
 numeral
 MIT
 Copyright (c) 2016 Adam Draper

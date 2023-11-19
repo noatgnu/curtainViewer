@@ -5,6 +5,7 @@ import {DataFrame, IDataFrame, ISeries, Series} from "data-forge";
 import {PlotlyModule} from "angular-plotly.js";
 import {SettingsService} from "../settings.service";
 import {MatCardModule} from "@angular/material/card";
+import {DataService} from "../data.service";
 
 @Component({
   selector: 'app-heatmap',
@@ -56,7 +57,10 @@ export class HeatmapComponent {
     }
   }
   revision: number = 0
-  constructor(private settings: SettingsService) {
+  constructor(private settings: SettingsService, private dataService: DataService) {
+    this.dataService.redrawSubject.subscribe(data => {
+      this.drawHeatmap()
+    })
   }
 
   drawHeatmap() {

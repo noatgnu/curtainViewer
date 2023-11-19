@@ -5,11 +5,12 @@ import {SettingsService} from "../settings.service";
 import {DataFrame, IDataFrame, ISeries, Series} from "data-forge";
 import {CompareData} from "../compare-data";
 import {SingleProteinContainerComponent} from "../single-protein-container/single-protein-container.component";
+import {MatDividerModule} from "@angular/material/divider";
 
 @Component({
   selector: 'app-detail-list-container',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule, SingleProteinContainerComponent],
+  imports: [CommonModule, MatPaginatorModule, SingleProteinContainerComponent, MatDividerModule],
   templateUrl: './detail-list-container.component.html',
   styleUrl: './detail-list-container.component.scss'
 })

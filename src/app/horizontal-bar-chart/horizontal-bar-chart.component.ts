@@ -4,6 +4,7 @@ import {SettingsService} from "../settings.service";
 import {DataFrame, IDataFrame} from "data-forge";
 import {CompareData} from "../compare-data";
 import {PlotlySharedModule} from "angular-plotly.js";
+import {DataService} from "../data.service";
 
 @Component({
   selector: 'app-horizontal-bar-chart',
@@ -40,7 +41,7 @@ export class HorizontalBarChartComponent {
       tickmode: "array",
     },
     xaxis: {
-      title: "log2 (fold change)",
+      title: "log2(fold change)",
     }
   }
 
@@ -65,7 +66,10 @@ export class HorizontalBarChartComponent {
 
   revision = 0
 
-  constructor(private settings: SettingsService) {
+  constructor(private settings: SettingsService, private dataService: DataService) {
+    this.dataService.redrawSubject.subscribe(data => {
+      this.drawGraph()
+    })
   }
 
   drawGraph() {

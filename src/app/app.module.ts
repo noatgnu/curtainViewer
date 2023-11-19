@@ -18,6 +18,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {DetailListContainerComponent} from "./detail-list-container/detail-list-container.component";
+import {MatCardModule} from "@angular/material/card";
 
 PlotlyModule.plotlyjs = PlotlyJS
 @NgModule({
@@ -40,7 +41,8 @@ PlotlyModule.plotlyjs = PlotlyJS
     MatProgressBarModule,
     MatMenuModule,
     MatPaginatorModule,
-    DetailListContainerComponent
+    DetailListContainerComponent,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
