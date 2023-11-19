@@ -5,6 +5,16 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content style="overflow: auto; max-height: 1000px">
+    <form [formGroup]="form" style="padding: 20px; display: flex; gap: 20px">
+      <mat-form-field>
+        <mat-label>Sort by session</mat-label>
+        <mat-select formControlName="sortBy">
+          <mat-option *ngFor="let s of sessionList" [value]="settings.settings.labelMap[s]">{{settings.settings.labelMap[s]}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-checkbox formControlName="descending">Descending</mat-checkbox>
+      <button mat-raised-button color="primary" (click)="update()">Update</button>
+    </form>
     <div style="display: flex; justify-content: center">
       <plotly-plot [data]="graphData" [layout]="graphLayout" [revision]="revision" [updateOnLayoutChange]="true"></plotly-plot>
     </div>

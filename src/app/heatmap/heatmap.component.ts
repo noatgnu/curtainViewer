@@ -6,17 +6,21 @@ import {PlotlyModule} from "angular-plotly.js";
 import {SettingsService} from "../settings.service";
 import {MatCardModule} from "@angular/material/card";
 import {DataService} from "../data.service";
+import {FormBuilder, FormControl, ReactiveFormsModule} from "@angular/forms";
+import {MatSelectModule} from "@angular/material/select";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-heatmap',
   standalone: true,
-  imports: [CommonModule, PlotlyModule, MatCardModule],
+  imports: [CommonModule, PlotlyModule, MatCardModule, ReactiveFormsModule, MatSelectModule, MatCheckboxModule, MatButtonModule],
   templateUrl: './heatmap.component.html',
   styleUrl: './heatmap.component.scss'
 })
 export class HeatmapComponent {
   private _data: ISeries<number, IDataFrame<number, CompareData>> = new Series()
-  private sessionList: string[] = []
+  sessionList: string[] = []
   @Input() set data(value: ISeries<number, IDataFrame<number, CompareData>>) {
     this._data = value
     this.sessionList = Object.keys(this.settings.settings.differentialMap)
@@ -57,14 +61,19 @@ export class HeatmapComponent {
     }
   }
   revision: number = 0
-  constructor(private settings: SettingsService, private dataService: DataService) {
+
+  form = this.fb.group({
+    sortBy: new FormControl<string>(""),
+    descending: new FormControl<boolean>(true)
+  })
+
+  constructor(public settings: SettingsService, private dataService: DataService, private fb: FormBuilder) {
     this.dataService.redrawSubject.subscribe(data => {
       this.drawHeatmap()
     })
   }
 
   drawHeatmap() {
-    console.log("draw heatmap")
     const temp: any = {
       x: [],
       y: [],
@@ -112,6 +121,9 @@ export class HeatmapComponent {
       temp.y.push(text)
       temp.z.push(z)
     })
+    if (this.form.value["sortBy"] !== "" && this.form.value["sortBy"]){
+      this.sortHeatmapBySession(this.form.value["sortBy"], temp)
+    }
     this.graphData = [temp]
     this.graphLayout.margin.l = longestTextSize * 8
     // calculate width of graph based on number of sessions and height of graph based on the number of proteins found
@@ -120,4 +132,20 @@ export class HeatmapComponent {
     this.revision ++
   }
 
+  sortHeatmapBySession(session: string, heatmap: any) {
+    const sessionIndex = this.sessionList.indexOf(session)
+    const sorted = heatmap.z.map((row: number[]) => row[sessionIndex])
+    let sortedIndex: number[] = []
+    if (this.form.value["descending"]) {
+      sortedIndex = sorted.map((_: any, i: any) => i).sort((a: number, b: number) => sorted[a] - sorted[b])
+    } else {
+      sortedIndex = sorted.map((_: any, i: any) => i).sort((a: number, b: number) => sorted[b] - sorted[a])
+    }
+    heatmap.y = sortedIndex.map((i: number) => heatmap.y[i])
+    heatmap.z = sortedIndex.map((i: number) => heatmap.z[i])
+  }
+
+  update() {
+    this.drawHeatmap()
+  }
 }
