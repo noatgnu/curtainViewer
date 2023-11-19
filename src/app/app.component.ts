@@ -19,27 +19,36 @@ import {ColorEditorComponent} from "./color-editor/color-editor.component";
 })
 export class AppComponent implements OnDestroy{
   title = 'Curtain Viewer';
-  exampleSelection = `Q9ULR3
-P51149
-P62820
-P61026
-P61006
-Q96QK1
-Q9H0U4
-Q92930
-Q6IQ22
-Q15286
-O60271
-O95716
-Q86YS6
-Q5EBL4
-P20337
-O14966
-Q9ULR3
-Q5S007
-Q86T03
-P37840
-Q5VZ89`
+  exampleSelection = `RAB7A_HUMAN
+RAB1A_HUMAN
+RAB10_HUMAN
+PPM1J_HUMAN
+RAB8A_HUMAN
+VPS35_HUMAN
+RAB1B_HUMAN
+RAB8B_HUMAN
+RAB12_HUMAN
+RAB35_HUMAN
+SPAG9_HUMAN
+RAB3A_HUMAN
+RAB3D_HUMAN
+RAB43_HUMAN
+RILPL1_HUMAN
+RAB3B_HUMAN
+RAB29_HUMAN
+PPM1H_HUMAN
+LRRK2_HUMAN
+RILPL2_HUMAN
+LRRK1_HUMAN
+MAPK8IP3_HUMAN
+PINK1_HUMAN
+PRKN_HUMAN
+TMEM55B_HUMAN
+SNCA_HUMAN
+SHH_HUMAN
+GLI3_HUMAN
+DENND4C_HUMAN
+RAB38_HUMAN`
   exampleURLs = `https://curtain.proteo.info/#/546c9ed7-30a6-4a0f-aedb-880815eb7051
 https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
   form = this.fb.group({
@@ -231,5 +240,10 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
         this.dataService.redrawSubject.next(true)
       }
     })
+  }
+
+  handleUpdate(data: string) {
+    console.log(data)
+    this.form.controls.selection.setValue(data)
   }
 }

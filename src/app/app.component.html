@@ -33,6 +33,9 @@
                 <textarea matInput formControlName="selection" [rows]="10"></textarea>
                 <mat-hint>{{selections.length}} ids entered</mat-hint>
               </mat-form-field>
+              <div>
+                <app-curated-list (updateText)="handleUpdate($event)"></app-curated-list>
+              </div>
               <div style="display: flex; flex-direction: column; gap: 20px">
                 <div>
                   <mat-form-field>

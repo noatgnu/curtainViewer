@@ -19,6 +19,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {DetailListContainerComponent} from "./detail-list-container/detail-list-container.component";
 import {MatCardModule} from "@angular/material/card";
+import {CuratedListComponent} from "./curated-list/curated-list.component";
 
 PlotlyModule.plotlyjs = PlotlyJS
 @NgModule({
@@ -42,7 +43,8 @@ PlotlyModule.plotlyjs = PlotlyJS
     MatMenuModule,
     MatPaginatorModule,
     DetailListContainerComponent,
-    MatCardModule
+    MatCardModule,
+    CuratedListComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
