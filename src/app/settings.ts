@@ -5,6 +5,14 @@ export class Settings {
   idList: string[] = []
   colorMap: {[key: string]: string} = {}
   barChartColorMap: {[key: string]: { [key: string]: string }} = {}
+
+  heatmapSettings: any = {
+    sortBySession: "",
+    cellSize: 20,
+    descending: true,
+  }
+
+
   defaultColorList: string[] = [
     "#fd7f6f",
     "#7eb0d5",

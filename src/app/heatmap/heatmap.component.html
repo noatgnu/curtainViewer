@@ -1,23 +1,47 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>
-      Differential Analysis Heatmap
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content style="overflow: auto; max-height: 1000px">
-    <form [formGroup]="form" style="padding: 20px; display: flex; gap: 20px">
-      <mat-form-field>
-        <mat-label>Sort by session</mat-label>
-        <mat-select formControlName="sortBy">
-          <mat-option *ngFor="let s of sessionList" [value]="settings.settings.labelMap[s]">{{settings.settings.labelMap[s]}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-checkbox formControlName="descending">Descending</mat-checkbox>
-      <button mat-raised-button color="primary" (click)="update()">Update</button>
-    </form>
-    <div style="display: flex; justify-content: center">
-      <plotly-plot [data]="graphData" [layout]="graphLayout" [revision]="revision" [updateOnLayoutChange]="true"></plotly-plot>
-    </div>
-  </mat-card-content>
-</mat-card>
+<div style="display: flex; gap: 20px; padding: 20px">
+  <div>
+    <mat-card>
+      <mat-card-header>
+        Heatmap Parameters
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="update()">
+          <div style="display: flex; gap: 20px">
+            <mat-form-field>
+              <mat-label>Sort by session</mat-label>
+              <mat-select formControlName="sortBy">
+                <mat-option *ngFor="let s of sessionList" [value]="settings.settings.labelMap[s]">{{settings.settings.labelMap[s]}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-checkbox formControlName="descending">Descending</mat-checkbox>
+          </div>
+          <div>
+            <mat-form-field>
+              <mat-label>Cell size</mat-label>
+              <input matInput type="number" formControlName="cellSize">
+            </mat-form-field>
+          </div>
+
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="update()">Update</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Differential Analysis Heatmap
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="overflow: auto; max-height: 1000px">
+        <div style="display: flex">
+          <plotly-plot [data]="graphData" [layout]="graphLayout" [revision]="revision" [updateOnLayoutChange]="true"></plotly-plot>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
 
