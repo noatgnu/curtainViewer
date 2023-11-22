@@ -93,27 +93,34 @@ export class HeatmapComponent {
     }
     let longestTextSize = 0
     // calculate custom heatmap scale going from purple to white to red
-
+    console.log(this.settings.settings.selectionMap)
+    console.log(this.data)
     this.data.forEach(group => {
       const z: any[] = []
-      group.groupBy(row => row.session + row.source_pid).forEach((g, k) => {
-        const session = g.first().session
-        const source_pid = g.first().source_pid
+      for (const session of temp.x) {
+        group.where(row => row.session === session).groupBy(row => {
+          return row.source_pid
+        }).forEach((g, k) => {
+          const source_pid = g.first().source_pid
+          if (session && source_pid && this.settings.settings.selectionMap[session][source_pid]) {
 
-        if (session && source_pid) {
-          const comparisonSelected = this.settings.settings.comparisonMap[session].selected
-          const d = g.where(row =>
-            row.comparison === comparisonSelected &&
-            row.primaryID === this.settings.settings.selectionMap[session][source_pid][comparisonSelected]
-          ).bake()
-          if (d.count() == 0) {
-            z.push(null)
+            const comparisonSelected = this.settings.settings.comparisonMap[session].selected
+            const d = g.where(row =>
+              row.comparison === comparisonSelected &&
+              row.primaryID === this.settings.settings.selectionMap[session][source_pid][comparisonSelected]
+            ).bake()
+            if (d.count() == 0) {
+              z.push(null)
+            } else {
+              const result = d.first()
+              z.push(result.foldChange)
+            }
           } else {
-            const result = d.first()
-            z.push(result.foldChange)
+            z.push(null)
           }
-        }
-      })
+        })
+      }
+
       let text = ""
       if (group.first()["Gene Names"]) {
         text = group.first()["Gene Names"] + " (" + group.first().primaryID  + ")"
@@ -126,6 +133,7 @@ export class HeatmapComponent {
       temp.y.push(text)
       temp.z.push(z)
     })
+    console.log(temp)
     if (this.form.value["sortBy"] !== "" && this.form.value["sortBy"]){
       this.sortHeatmapBySession(this.form.value["sortBy"], temp)
     }

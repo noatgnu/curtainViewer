@@ -82,12 +82,14 @@ export class RawDataBarChartComponent {
       for (const i in this.settings.settings.rawMap) {
         const data = this.settings.settings.rawMap[i]
         const comparisonSelected = this.settings.settings.comparisonMap[i].selected
-        const primaryID = this.settings.settings.selectionMap[i][this._data][comparisonSelected]
-        const sampleMap = this.settings.settings.sampleMap[i]
-        const result = data.where(row => row["primaryID"] === primaryID).bake().first()
-        if (result) {
-          for (const c in sampleMap) {
-            temp.push({"replicate": c, "condition": sampleMap[c]["condition"], "value":result[c], "session": i, "primaryID": primaryID})
+        if (this.settings.settings.selectionMap[i][this._data]) {
+          const primaryID = this.settings.settings.selectionMap[i][this._data][comparisonSelected]
+          const sampleMap = this.settings.settings.sampleMap[i]
+          const result = data.where(row => row["primaryID"] === primaryID).bake().first()
+          if (result) {
+            for (const c in sampleMap) {
+              temp.push({"replicate": c, "condition": sampleMap[c]["condition"], "value":result[c], "session": i, "primaryID": primaryID})
+            }
           }
         }
       }
