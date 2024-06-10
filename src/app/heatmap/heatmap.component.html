@@ -10,7 +10,7 @@
             <mat-form-field>
               <mat-label>Sort by session</mat-label>
               <mat-select formControlName="sortBy">
-                <mat-option *ngFor="let s of sessionList" [value]="settings.settings.labelMap[s]">{{settings.settings.labelMap[s]}}</mat-option>
+                <mat-option *ngFor="let s of sessionList" [value]="s">{{settings.settings.labelMap[s]}}</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-checkbox formControlName="descending">Descending</mat-checkbox>

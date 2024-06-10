@@ -88,6 +88,8 @@ export class HeatmapComponent {
     }
     for (const s of this.sessionList) {
       if (this.settings.settings.labelMap[s]) {
+        temp.x.push(this.settings.settings.labelMap[s])
+      } else {
         temp.x.push(s)
       }
     }
