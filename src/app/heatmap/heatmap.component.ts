@@ -137,7 +137,7 @@ export class HeatmapComponent {
     if (this.form.value["sortBy"] !== "" && this.form.value["sortBy"]){
       this.sortHeatmapBySession(this.form.value["sortBy"], temp)
     }
-    temp.x.map((a: string) => this.settings.settings.labelMap[a] ? this.settings.settings.labelMap[a] : a)
+    temp.x = temp.x.map((s: string) => this.settings.settings.labelMap[s])
     this.graphData = [temp]
     this.graphLayout.margin.l = longestTextSize * 8
     // calculate width of graph based on number of sessions and height of graph based on the number of proteins found
