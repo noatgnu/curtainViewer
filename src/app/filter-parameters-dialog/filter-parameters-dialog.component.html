@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Filter Parameters</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" style="display: flex; flex-direction: column; gap: 1px">
+    <mat-form-field>
+      <input matInput formControlName="filterFoldChange" id="filterFoldChange" type="number" placeholder="Log2 Fold Change">
+      <mat-label>Log2 Fold Change</mat-label>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput formControlName="filterPValue" id="filterPValue" type="number" placeholder="P-Value">
+      <mat-label>-Log10(P-Value)</mat-label>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput formControlName="filterMinimumSessions" id="filterMinimumSessions" type="number" placeholder="Filter Minimum Session">
+      <mat-label>Filter Minimum Session</mat-label>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="save()">Submit</button>
+  <button mat-button (click)="cancel()">Close</button>
+</mat-dialog-actions>

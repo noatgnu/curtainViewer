@@ -1,6 +1,17 @@
-<mat-paginator [pageSize]="pageSize" [length]="totalItems" [pageIndex]="pageIndex" (page)="handlePageEvent($event)">
+<div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center">
+  <form [formGroup]="form" style="display: flex; flex-direction: row; gap: 2">
+    <mat-form-field>
+      <input matInput formControlName="searchTerm" placeholder="Search" type="search">
+      <mat-label>Search Term</mat-label>
+    </mat-form-field>
+    <button mat-icon-button (click)="resetForm()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </form>
+  <mat-paginator [pageSize]="pageSize" [length]="totalItems" [pageIndex]="pageIndex" (page)="handlePageEvent($event)">
+  </mat-paginator>
+</div>
 
-</mat-paginator>
 
 <div style="padding: 20px" *ngFor="let s of displayDF">
   <app-single-protein-container [data]="s"></app-single-protein-container>

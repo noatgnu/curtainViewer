@@ -7,6 +7,8 @@ import {DataFrame, IDataFrame, Series} from "data-forge";
   providedIn: 'root'
 })
 export class DataService {
+
+
   defaultColorList = [
     "#fd7f6f",
     "#7eb0d5",
@@ -128,12 +130,28 @@ export class DataService {
     window.URL.revokeObjectURL(url)
   }
 
-  createDifferentialDF(differentialMap: {[key: string]: IDataFrame<number, CompareData>}) {
+  createDifferentialDF(differentialMap: {[key: string]: IDataFrame<number, CompareData>}, filterFoldChange: number = 0.6, filterPValue: number = -Math.log10(0.05), filterMinimumSessions: number = 1) {
     const dfArray: any[] = []
     for (const d in differentialMap) {
       differentialMap[d] = differentialMap[d].withSeries("session", new Series(Array(differentialMap[d].count()).fill(d))).bake()
       dfArray.push(differentialMap[d])
     }
-    this.differential = DataFrame.concat(dfArray).bake()
+
+    const differential = DataFrame.concat(dfArray).bake()
+    const result: IDataFrame<number, CompareData>[] = []
+    differential.groupBy(row => row.source_pid).forEach((g, k) => {
+      if (g.getSeries('session').distinct().count() < filterMinimumSessions) {
+        return
+      }
+      if (g.where((row: CompareData) => {
+        return row.significant >= filterPValue && (Math.abs(row.foldChange) < filterFoldChange || Math.abs(row.foldChange) > filterFoldChange)
+      }).getSeries('session').distinct().count() < filterMinimumSessions) {
+        return
+      }
+      result.push(g)
+    })
+
+    this.differential = DataFrame.concat(result).bake()
+
   }
 }

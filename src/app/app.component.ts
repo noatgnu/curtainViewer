@@ -11,6 +11,7 @@ import {SettingsService} from "./settings.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DataService} from "./data.service";
 import {ColorEditorComponent} from "./color-editor/color-editor.component";
+import {FilterParametersDialogComponent} from "./filter-parameters-dialog/filter-parameters-dialog.component";
 
 @Component({
   selector: 'app-root',
@@ -136,7 +137,7 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
 
                     }
                   }
-                  this.dataService.createDifferentialDF(this.settings.settings.differentialMap)
+                  this.dataService.createDifferentialDF(this.settings.settings.differentialMap, this.settings.settings.filterFoldChange, this.settings.settings.filterPValue, this.settings.settings.filterMinimumSessions)
                   this.results = this.dataService.differential.groupBy(row => row.source_pid)
                   this.found = this.settings.settings.found
                 } else {
@@ -213,8 +214,9 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
             const target = e.target as FileReader
             this.settings.settings.deserialize(target.result as string)
             this.found = this.settings.settings.found
-            this.dataService.createDifferentialDF(this.settings.settings.differentialMap)
+            this.dataService.createDifferentialDF(this.settings.settings.differentialMap, this.settings.settings.filterFoldChange, this.settings.settings.filterPValue, this.settings.settings.filterMinimumSessions)
             this.results = this.dataService.differential.groupBy(row => row.source_pid)
+
           }
         }
         reader.readAsText(file)
@@ -245,5 +247,24 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
   handleUpdate(data: string) {
     console.log(data)
     this.form.controls.selection.setValue(data)
+  }
+
+  loadFilterParametersDialog() {
+    const ref = this.dialog.open(FilterParametersDialogComponent)
+    ref.componentInstance.filterPValue = this.settings.settings.filterPValue
+    ref.componentInstance.filterFoldChange = this.settings.settings.filterFoldChange
+    ref.componentInstance.filterMinimumSessions = this.settings.settings.filterMinimumSessions
+    ref.afterClosed().subscribe(result => {
+      console.log(result)
+      if (result) {
+        this.settings.settings.filterPValue = result.filterPValue
+        this.settings.settings.filterFoldChange = result.filterFoldChange
+        this.settings.settings.filterMinimumSessions = result.filterMinimumSessions
+        this.dataService.createDifferentialDF(this.settings.settings.differentialMap, this.settings.settings.filterFoldChange, this.settings.settings.filterPValue, this.settings.settings.filterMinimumSessions)
+        this.results = this.dataService.differential.groupBy(row => row.source_pid)
+        console.log(this.results)
+        this.dataService.redrawSubject.next(true)
+      }
+    })
   }
 }

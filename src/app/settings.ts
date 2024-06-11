@@ -11,7 +11,9 @@ export class Settings {
     cellSize: 20,
     descending: true,
   }
-
+  filterFoldChange: number = 0.6
+  filterPValue: number = -Math.log10(0.05)
+  filterMinimumSessions: number = 1
 
   defaultColorList: string[] = [
     "#fd7f6f",
