@@ -12,6 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {DataService} from "./data.service";
 import {ColorEditorComponent} from "./color-editor/color-editor.component";
 import {FilterParametersDialogComponent} from "./filter-parameters-dialog/filter-parameters-dialog.component";
+import {CurtainEncryption} from "curtain-web-api";
 
 @Component({
   selector: 'app-root',
@@ -57,6 +58,8 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
     matchType: ["geneNames", Validators.required],
     selection: [this.exampleSelection, Validators.required],
   })
+  uniqueLink: string = ""
+  sessionID: string = ""
 
   matchTypes: string[] = ["primaryID","primaryID-uniprot", "geneNames"]
 
@@ -266,5 +269,26 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
         this.dataService.redrawSubject.next(true)
       }
     })
+  }
+
+  saveToServer() {
+    const data = this.settings.settings
+    const encryption: CurtainEncryption = {
+      encrypted: false,
+      e2e: false,
+      publicKey: undefined,
+    }
+    this.accounts.curtainAPI.putSettings(data, true, "", "F", encryption).then((response) => {
+      if (response.data) {
+        this.sessionID = response.data.link_id
+        this.uniqueLink = location.origin + "/#/" + this.sessionID
+        this.snackBar.open("Settings saved to server", "Close", {duration: 5000})
+      }
+    })
+  }
+
+  copySessionLink() {
+    navigator.clipboard.writeText(this.uniqueLink)
+    this.snackBar.open("Link copied to clipboard", "Close", {duration: 5000})
   }
 }

@@ -3,12 +3,15 @@
 
   </mat-drawer>
   <mat-toolbar color="primary">
-    <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+<!--    <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
       <mat-icon>menu</mat-icon>
-    </button>
+    </button>-->
     <!-- <span>My App</span> -->
     <span style="font-size: 18pt">Curtain Viewer</span>
     <span class="spacer"></span>
+    @if(uniqueLink && uniqueLink !== "") {
+      <button mat-button (click)="copySessionLink()">{{sessionID}}</button>
+    }
     <button mat-icon-button (click)="loadFilterParametersDialog()"><mat-icon>filter_list</mat-icon></button>
     <button mat-icon-button [matMenuTriggerFor]="saveMenu"><mat-icon>save</mat-icon></button>
     <button mat-icon-button (click)="loadColorEditor()"><mat-icon>color_lens</mat-icon></button>
@@ -81,7 +84,7 @@
 </mat-drawer-container>
 
 <mat-menu #saveMenu="matMenu">
-  <button mat-menu-item>Save to server</button>
+  <button mat-menu-item (click)="saveToServer()">Save to server</button>
   <button mat-menu-item (click)="saveAsJSON()">Save to computer</button>
   <button mat-menu-item (click)="loadJSON()">Load from computer</button>
 </mat-menu>

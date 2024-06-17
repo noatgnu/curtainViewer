@@ -22,7 +22,7 @@
     "@angular/router": "^18.0.2",
     "@types/pouchdb": "^6.4.2",
     "angular-plotly.js": "^5.2.2",
-    "curtain-web-api": "^1.0.45",
+    "curtain-web-api": "^1.0.47",
     "data-forge": "^1.10.1",
     "ngx-colors": "^3.5.2",
     "plotly.js-dist-min": "^2.27.1",
