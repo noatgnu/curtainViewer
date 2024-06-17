@@ -109,7 +109,12 @@ export class Settings {
   }
 
   deserialize(payload: string) {
-    const data: any = JSON.parse(payload)
+    let data: any = {}
+    if (typeof payload === "string") {
+      data = JSON.parse(payload)
+    } else {
+      data = payload
+    }
     for (const i in data.differentialMap) {
       data.differentialMap[i] = new DataFrame(JSON.parse(data.differentialMap[i]))
     }

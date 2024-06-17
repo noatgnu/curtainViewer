@@ -1,0 +1,83 @@
+<mat-toolbar color="primary">
+  <!--    <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
+      </button>-->
+  <!-- <span>My App</span> -->
+  <span style="font-size: 18pt">Curtain Viewer</span>
+  <span class="spacer"></span>
+  @if(uniqueLink && uniqueLink !== "") {
+    <button mat-button (click)="copySessionLink()">{{sessionID}}</button>
+  }
+  <button mat-icon-button (click)="loadFilterParametersDialog()"><mat-icon>filter_list</mat-icon></button>
+  <button mat-icon-button [matMenuTriggerFor]="saveMenu"><mat-icon>save</mat-icon></button>
+  <button mat-icon-button (click)="loadColorEditor()"><mat-icon>color_lens</mat-icon></button>
+</mat-toolbar>
+<div>
+  <div style="padding: 20px; display: flex; justify-content: center">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <h3>Input parameters</h3>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form">
+          <div style="display:flex; gap: 20px">
+            <mat-form-field style="width: 500px">
+              <mat-label>Curtain sessions</mat-label>
+              <textarea matInput formControlName="urls" [rows]="10"></textarea>
+              <mat-hint>{{idList.length}} links entered</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="width: 500px">
+              <mat-label>Selection List</mat-label>
+              <textarea matInput formControlName="selection" [rows]="10"></textarea>
+              <mat-hint>{{selections.length}} ids entered</mat-hint>
+            </mat-form-field>
+            <div>
+              <app-curated-list (updateText)="handleUpdate($event)"></app-curated-list>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 20px">
+              <div>
+                <mat-form-field>
+                  <mat-label>Match type</mat-label>
+                  <mat-select formControlName="matchType">
+                    <mat-option *ngFor="let o of matchTypes" [value]="o">{{o}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div *ngIf="idList.length > 0">
+                <button mat-raised-button color="primary" (click)="openLinkLabelling()">Link Labelling</button>
+              </div>
+              <div>
+                <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div style="padding: 20px" *ngIf="performingTask">
+    <small>{{progressText}}</small>
+    <mat-progress-bar mode="indeterminate" [value]="progressValue">
+
+    </mat-progress-bar>
+  </div>
+
+  <div style="display: flex; justify-content: center; padding: 20px" *ngIf="found.length > 0">
+    <div style="flex-grow: 1">
+      <app-heatmap [data]="results"></app-heatmap>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: center; padding: 20px" *ngIf="found.length > 0">
+    <div style="flex-grow: 1">
+      <app-detail-list-container [foundEntries]="found" [data]="results"></app-detail-list-container>
+    </div>
+  </div>
+</div>
+<mat-menu #saveMenu="matMenu">
+  <button mat-menu-item (click)="saveToServer()">Save to server</button>
+  <button mat-menu-item (click)="saveAsJSON()">Save to computer</button>
+  <button mat-menu-item (click)="loadJSON()">Load from computer</button>
+</mat-menu>
