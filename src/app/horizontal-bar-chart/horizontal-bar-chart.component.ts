@@ -76,7 +76,9 @@ export class HorizontalBarChartComponent {
     const graphData: any[] = []
     const graphDataS: any[] = []
     this.data.groupBy(row => row.session).forEach((group, key) => {
-
+      if (group.count() === 0) {
+        return
+      }
       const session = group.first().session
       if (session) {
         const color = this.settings.settings.colorMap[session]
@@ -111,15 +113,18 @@ export class HorizontalBarChartComponent {
         const selectedComparison = this.settings.settings.comparisonMap[session].selected
 
         const selectedData = group.where(row => row.source_pid === matchEntry && row.comparison === selectedComparison).bake()
-        const r = selectedData.first()
-        if (r.session) {
-          temp.y.push(this.settings.settings.labelMap[r.session])
-          tempS.y.push(this.settings.settings.labelMap[r.session])
-          temp.x.push(r.foldChange)
-          tempS.x.push(r.significant)
-          graphData.push(temp)
-          graphDataS.push(tempS)
+        if (selectedData.count() > 0) {
+          const r = selectedData.first()
+          if (r.session) {
+            temp.y.push(this.settings.settings.labelMap[r.session])
+            tempS.y.push(this.settings.settings.labelMap[r.session])
+            temp.x.push(r.foldChange)
+            tempS.x.push(r.significant)
+            graphData.push(temp)
+            graphDataS.push(tempS)
+          }
         }
+
       }
     })
     //calculate height of graph based on number of sessions

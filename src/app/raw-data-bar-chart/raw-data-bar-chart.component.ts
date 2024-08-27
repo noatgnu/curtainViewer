@@ -85,8 +85,9 @@ export class RawDataBarChartComponent {
         if (this.settings.settings.selectionMap[i][this._data]) {
           const primaryID = this.settings.settings.selectionMap[i][this._data][comparisonSelected]
           const sampleMap = this.settings.settings.sampleMap[i]
-          const result = data.where(row => row["primaryID"] === primaryID).bake().first()
-          if (result) {
+          let result: any = data.where(row => row["primaryID"] === primaryID).bake()
+          if (result.count() > 0) {
+            result = result.first()
             for (const c in sampleMap) {
               temp.push({"replicate": c, "condition": sampleMap[c]["condition"], "value":result[c], "session": i, "primaryID": primaryID})
             }
