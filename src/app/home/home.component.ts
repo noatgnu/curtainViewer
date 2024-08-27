@@ -185,18 +185,24 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
                       this.settings.settings.comparisonMap[d] = {selected: "", comparisonList: []}
                       this.settings.settings.comparisonMap[d].comparisonList = this.settings.settings.differentialMap[d].getSeries("comparison").distinct().toArray()
                       this.settings.settings.comparisonMap[d].selected = this.settings.settings.comparisonMap[d].comparisonList[0]
+                      console.log(this.settings.settings.comparisonMap[d].comparisonList)
+                      console.log(this.settings.settings.differentialMap)
                       for (const c of this.settings.settings.comparisonMap[d].comparisonList) {
 
                         this.settings.settings.differentialMap[d].groupBy(row => row.source_pid).forEach((group, key) => {
-                          const data = group.where(row => row.comparison === c).bake().first()
-                          if (data) {
-                            if (!(this.settings.settings.selectionMap[d][data.source_pid])) {
-                              this.settings.settings.selectionMap[d][data.source_pid] = {}
-                            }
-                            if (!(this.settings.settings.selectionMap[d][data.source_pid][c])) {
-                              this.settings.settings.selectionMap[d][data.source_pid][c] = data.primaryID
+                          const data = group.where(row => row.comparison === c).bake()
+                          if (data.count() > 0) {
+                            const first_row = data.first()
+                            if (data) {
+                              if (!(this.settings.settings.selectionMap[d][first_row.source_pid])) {
+                                this.settings.settings.selectionMap[d][first_row.source_pid] = {}
+                              }
+                              if (!(this.settings.settings.selectionMap[d][first_row.source_pid][c])) {
+                                this.settings.settings.selectionMap[d][first_row.source_pid][c] = first_row.primaryID
+                              }
                             }
                           }
+
                         })
                       }
                     } else {
@@ -266,7 +272,6 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
   }
 
   handleUpdate(data: string) {
-    console.log(data)
     this.form.controls.selection.setValue(data)
   }
 
@@ -276,14 +281,12 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
     ref.componentInstance.filterFoldChange = this.settings.settings.filterFoldChange
     ref.componentInstance.filterMinimumSessions = this.settings.settings.filterMinimumSessions
     ref.afterClosed().subscribe(result => {
-      console.log(result)
       if (result) {
         this.settings.settings.filterPValue = result.filterPValue
         this.settings.settings.filterFoldChange = result.filterFoldChange
         this.settings.settings.filterMinimumSessions = result.filterMinimumSessions
         this.dataService.createDifferentialDF(this.settings.settings.differentialMap, this.settings.settings.filterFoldChange, this.settings.settings.filterPValue, this.settings.settings.filterMinimumSessions)
         this.results = this.dataService.differential.groupBy(row => row.source_pid)
-        console.log(this.results)
         this.dataService.redrawSubject.next(true)
       }
     })
