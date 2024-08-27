@@ -33,6 +33,18 @@
               <textarea matInput formControlName="selection" [rows]="10"></textarea>
               <mat-hint>{{selections.length}} ids entered</mat-hint>
             </mat-form-field>
+            <div style="display: flex; gap: 20px">
+              <mat-form-field>
+                <mat-label>Suffix Original Term</mat-label>
+                <input matInput formControlName="replace_suffix" type="text">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Replace Term</mat-label>
+                <input matInput formControlName="replace_term" type="text">
+              </mat-form-field>
+              <button mat-raised-button color="primary" (click)="replaceSelection()">Replace</button>
+            </div>
+
             <div>
               <app-curated-list (updateText)="handleUpdate($event)"></app-curated-list>
             </div>

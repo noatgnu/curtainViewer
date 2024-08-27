@@ -103,6 +103,8 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
     urls: [this.exampleURLs, Validators.required],
     matchType: ["geneNames", Validators.required],
     selection: [this.exampleSelection, Validators.required],
+    replace_suffix: ["_HUMAN"],
+    replace_with: [""]
   })
   uniqueLink: string = ""
   sessionID: string = ""
@@ -355,5 +357,18 @@ https://curtain.proteo.info/#/f4b009f3-ac3c-470a-a68b-55fcadf68d0f`
   copySessionLink() {
     navigator.clipboard.writeText(this.uniqueLink)
     this.snackBar.open("Link copied to clipboard", "Close", {duration: 5000})
+  }
+
+  replaceSelection() {
+    const selection = this.form.controls.selection.value
+    const replaceWith = this.form.controls.replace_with.value
+    const replaceSuffix = this.form.controls.replace_suffix.value
+    const selections: string[] = []
+    if (selection && replaceSuffix && replaceWith) {
+      for (const s of selection.split("\n")) {
+        selections.push(s.trim().replace(replaceSuffix, replaceWith))
+      }
+      this.form.controls.selection.setValue(selections.join("\n"))
+    }
   }
 }

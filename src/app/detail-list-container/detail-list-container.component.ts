@@ -11,6 +11,7 @@ import {MatFormField} from "@angular/material/form-field";
 import {MatInput, MatLabel} from "@angular/material/input";
 import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-detail-list-container',
@@ -44,6 +45,8 @@ export class DetailListContainerComponent {
   form = this.fb.group({
     searchTerm: new FormControl(),
   })
+
+
 
   constructor(private settings: SettingsService, private fb: FormBuilder) {
     this.form.controls.searchTerm.valueChanges.subscribe((value: string) => {
